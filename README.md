@@ -1,6 +1,6 @@
 # MezuriAdminDashboard
 
-Login <-> Node
+Login <-> Node1
 ```js
 {
   ...,

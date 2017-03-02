@@ -1,0 +1,22 @@
+{
+  "name": "mezuriadmindashboard",
+  "version": "1.0.0",
+  "description": "Login <-> Node1 ```js {   ...,   credential: {     tenantId: \"\",     appId: \"\",     key: \"\"   } } ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdaigle/MezuriAdminDashboard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mdaigle/MezuriAdminDashboard/issues"
+  },
+  "homepage": "https://github.com/mdaigle/MezuriAdminDashboard#readme",
+  "dependencies": {
+    "express": "^4.15.0"
+  }
+}

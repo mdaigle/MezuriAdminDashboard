@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/mdaigle/MezuriAdminDashboard#readme",
   "dependencies": {
+    "body-parser": "^1.17.0",
     "express": "^4.15.0"
   }
 }

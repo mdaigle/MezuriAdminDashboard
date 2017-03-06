@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Users</title>
+    {{#each scripts}}
+        <script type="text/javascript" src="{{this.src}}" {{this.attribute}}></script>
+    {{/each}}
+</head>
+<body>
+    <div id="users_header">
+        <h1>Users</h1>
+    </div>
+    <div id="users"></div>
+</body>
+</html>

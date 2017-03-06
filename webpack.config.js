@@ -1,9 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
 var AssetsPlugin = require('assets-webpack-plugin');
-var assetsPluginInstance = new AssetsPlugin({
-    path: path.resolve(__dirname, 'dist')
-});
+var assetsPluginInstance = new AssetsPlugin();
 
 module.exports = {
     entry: {

@@ -1,5 +1,5 @@
 node_modules/
 dist/
-flow-typed/
+webpack-assets.json
 
 .idea/

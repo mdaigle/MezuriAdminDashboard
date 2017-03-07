@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@microsoft/microsoft-graph-types": "^0.4.1",
-    "@types/node": "^7.0.5"
+    "@types/node": "^7.0.5",
+    "typescript": "^2.2.1"
   }
 }

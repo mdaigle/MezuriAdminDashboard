@@ -1,13 +1,14 @@
-var webpack = require('webpack');
-var path = require('path');
-var AssetsPlugin = require('assets-webpack-plugin');
-var assetsPluginInstance = new AssetsPlugin();
+const webpack = require('webpack');
+const path = require('path');
+const AssetsPlugin = require('assets-webpack-plugin');
+
+const assetsPluginInstance = new AssetsPlugin();
 
 module.exports = {
     entry: {
         users: './js/users.js',
         microsoftGraphClient: '@microsoft/microsoft-graph-client',
-        axios: 'axios'
+        $: 'jquery'
     },
     output: {
         filename: '[chunkhash].[name].js',
@@ -33,7 +34,7 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
-            names: ['microsoftGraphClient', 'axios', 'manifest']
+            names: ['microsoftGraphClient', '$', 'manifest']
         }),
         assetsPluginInstance
     ],

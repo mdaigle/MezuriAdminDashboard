@@ -2,6 +2,10 @@
 <html>
 <head>
     <title>Users</title>
+    <script>
+        var token = "{{token}}";
+    </script>
+    <script type="text/javascript" src="hbs.js"></script>
     {{#each scripts}}
         <script type="text/javascript" src="{{this.src}}" {{this.attribute}}></script>
     {{/each}}

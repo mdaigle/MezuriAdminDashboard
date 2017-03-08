@@ -2,7 +2,9 @@
 
 import path from 'path';
 import fs from 'fs';
+
 import rp from 'request-promise-native';
+import graphClient from '@microsoft/microsoft-graph-client';
 
 const resourceUri = 'https://graph.microsoft.com/';
 const tokenUrl = 'http://localhost:5000/token';
@@ -21,6 +23,14 @@ export async function getToken(req) {
         },
         headers: {
             Cookie: Object.entries(req.cookies).map((c) => c[0] + "=" + c[1]).join("; ")
+        }
+    });
+}
+
+export function getGraphClient(token) {
+    return graphClient.Client.init({
+        authProvider: (done) => {
+            done(null, token)
         }
     });
 }

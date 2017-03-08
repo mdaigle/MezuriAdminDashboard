@@ -10,27 +10,33 @@
     <div id="users_header">
         <h1>Users</h1>
     </div>
+    <div id="user-actions">
+        <a href="/users/add">Add</a>
+        <a href="/users/delete">Delete</a>
+        <a href="/users/export">Export</a>
+    </div>
     <div id="users">
         {{#each users}}
             <div class="user">
-                <a href="/user/{{this.id}}">{{this.displayName}}</a>
-                <!--<div class="member-of">-->
-                    {{#each this.memberOf}}
-                        <ul>{{this.displayName}}</ul>
-                    {{/each}}
-                <!--</div>-->
-                <!--<div class="member-of-lists">-->
-                    <!--{{#each this.lists}}-->
-                        <!--<div class="{{this.class}}">-->
-                            <!--<h3>{{this.title}}</h3>-->
-                            <!--<div class="member-of">-->
-                                <!--{{#each this.memberOf}}-->
-                                    <!--<ul>{{this.displayName}}</ul>-->
-                                <!--{{/each}}-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--{{/each}}-->
-                <!--</div>-->
+                <a href="/users/{{this.id}}">{{this.displayName}}</a>
+                <div class="member-of-lists">
+                    <div class="direct-member-of-list">
+                        <h6>Direct Memberships</h6>
+                        <div class="member-of">
+                            {{#each this.directMemberOf}}
+                                <ul>{{this.displayName}}</ul>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div class="transitive-member-of-list">
+                        <h6>Transitive Memberships</h6>
+                        <div class="member-of">
+                            {{#each this.transitiveMemberOf}}
+                                <ul>{{this.displayName}}</ul>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
             </div>
         {{/each}}
     </div>

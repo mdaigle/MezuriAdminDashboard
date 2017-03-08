@@ -2,10 +2,6 @@
 <html>
 <head>
     <title>Users</title>
-    <script>
-        var token = "{{token}}";
-    </script>
-    <script type="text/javascript" src="hbs.js"></script>
     {{#each scripts}}
         <script type="text/javascript" src="{{this.src}}" {{this.attribute}}></script>
     {{/each}}
@@ -14,6 +10,29 @@
     <div id="users_header">
         <h1>Users</h1>
     </div>
-    <div id="users"></div>
+    <div id="users">
+        {{#each users}}
+            <div class="user">
+                <a href="/user/{{this.id}}">{{this.displayName}}</a>
+                <!--<div class="member-of">-->
+                    {{#each this.memberOf}}
+                        <ul>{{this.displayName}}</ul>
+                    {{/each}}
+                <!--</div>-->
+                <!--<div class="member-of-lists">-->
+                    <!--{{#each this.lists}}-->
+                        <!--<div class="{{this.class}}">-->
+                            <!--<h3>{{this.title}}</h3>-->
+                            <!--<div class="member-of">-->
+                                <!--{{#each this.memberOf}}-->
+                                    <!--<ul>{{this.displayName}}</ul>-->
+                                <!--{{/each}}-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--{{/each}}-->
+                <!--</div>-->
+            </div>
+        {{/each}}
+    </div>
 </body>
 </html>

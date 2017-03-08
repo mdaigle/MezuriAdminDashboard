@@ -6,8 +6,6 @@ const assetsPluginInstance = new AssetsPlugin();
 
 module.exports = {
     entry: {
-        users: './js/users.js',
-        microsoftGraphClient: '@microsoft/microsoft-graph-client',
         $: 'jquery'
     },
     output: {
@@ -34,7 +32,7 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
-            names: ['microsoftGraphClient', '$', 'manifest']
+            names: ['$', 'manifest']
         }),
         assetsPluginInstance
     ],

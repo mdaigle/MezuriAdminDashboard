@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 const express = require('express');
 const cons = require('consolidate');
 
-import { getJsByName, getToken } from './js/util';
+import { getToken } from './js/util';
 
 const app = express();
 app.engine('html', cons.handlebars);
@@ -21,20 +21,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use(async (req, res, next) => {
+    req.token = await getToken(req);
+    next();
+});
+
+import renderUsers from './js/users';
+
 app.get('/', function(req, res) {
     res.sendFile('index.html');
 });
 
-app.get('/users', async (req, res) => {
-    res.render('users/users.hbs', {
-        scripts: getJsByName(['manifest', 'microsoftGraphClient', 'users']),
-        token: await getToken(req)
-    });
-});
-
-app.get('/hbs/:page/:item', (req, res) => {
-    res.sendFile('/views/' + req.param('page') + '/' + req.param('item'));
-});
+app.get('/users', renderUsers);
 
 // We can change this to whatever port
 app.listen(3000);

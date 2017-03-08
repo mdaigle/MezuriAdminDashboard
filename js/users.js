@@ -2,20 +2,36 @@
 
 import graphClient from '@microsoft/microsoft-graph-client';
 
-async function users() {
+import { getJsByName } from './util';
+
+export default async function render(req, res) {
+    const userFields = ['displayName', 'id', 'userPrincipalName'];
+    const groupFields = ['displayName'];
+
     const client = graphClient.Client.init({
         authProvider: (done) => {
-            done(null, token)
+            done(null, req.token)
         }
     });
 
-    client
+    const userList = await client
         .api('/users')
-        .select(['displayName', 'id', 'userPrincipalName'])
-        .get((err, res) => {
-            console.log(res);
-            // users = res;
-        });
-}
+        .select(userFields)
+        .get();
 
-users().then();
+    const directMemberOf = await Promise.all(userList.value
+        .map(async (user) => (Object.assign({
+            memberOf: (await client
+                .api(`/users/${user.id}/memberOf`)
+                .select(groupFields)
+                .get()).value
+        }, user))));
+
+    console.log(userList.value[0]);
+    console.log(directMemberOf[0]);
+
+    res.render('users/users.hbs', {
+        // scripts: getJsByName(['manifest']),
+        users: directMemberOf
+    })
+}

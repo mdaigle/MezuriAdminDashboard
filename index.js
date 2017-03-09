@@ -30,8 +30,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(async (req, res, next) => {
-    req.token = await getToken(req);
-    req.graphClient = getGraphClient(req.token);
+    try {
+        req.token = await getToken(req);
+        req.graphClient = getGraphClient(req.token);
+    } catch (err) {
+        console.error(err);
+        res.redirect('http://localhost:5000');
+    }
     next();
 });
 

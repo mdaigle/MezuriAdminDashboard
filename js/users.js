@@ -59,7 +59,7 @@ export async function renderUserProfile(req, res) {
             [pair[0]]: {
                 label: pair[1],
                 value: profile[pair[0]],
-                disabled: disabledFields[pair[0]] ? "disabled" : undefined
+                disabled: disabledFields[pair[0]] ? 'disabled' : undefined
             }
         }))
         .reduceRight((prev, curr) => Object.assign(curr, prev), {});
@@ -80,7 +80,7 @@ export async function userEditPost(req, res) {
         .reduce((prev, curr) => Object.assign(curr, prev), {});
 
     try {
-        data.accountEnabled = JSON.parse(data.accountEnabled);
+        data.accountEnabled = !!JSON.parse(data.accountEnabled);
     } catch (err) {
         data.accountEnabled = false;
     }
@@ -98,11 +98,41 @@ export async function userEditPost(req, res) {
 }
 
 export async function renderUserDelete(req, res) {
-    
+    let deleteList;
+    if (req.query.id) {
+        if (Array.isArray(req.query.id)) {
+            deleteList = req.query.id
+                .map((id) => ({ [id]: 'checked'} ))
+                .reduce((prev, curr) => Object.assign(curr, prev));
+        } else {
+            deleteList = { [req.query.id]: 'checked' }
+        }
+    }
+
+    try {
+        res.render('users/user-delete.hbs', {
+            userList: await listUsers(req.graphClient, ['displayName', 'id', 'userPrincipalName']),
+            deleteList: deleteList
+        });
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 export async function userDeletePost(req, res) {
+    try {
+        await Promise.all(Object
+            .keys(req.body)
+            .map(async (id) => await req.graphClient
+                .api(`/users/${id}`)
+                .delete()
+            )
+        );
+    } catch (err) {
+        console.error(err);
+    }
 
+    res.redirect('/users/delete');
 }
 
 export async function renderUserExport(req, res) {
@@ -117,7 +147,8 @@ async function listUsers(client, fields) {
     let users = await client
         .api('/users')
         .select(fields)
-        .top(5)
+        // .top(5)
+        .orderby('displayName')
         .get();
 
     return users.value;

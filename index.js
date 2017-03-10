@@ -12,6 +12,8 @@ inspect.defaultOptions = {
     colors: true
 };
 
+process.on('unhandledRejection', r => console.log(r)); // turns on detailed error/warning
+
 import { getToken, getGraphClient } from './js/util';
 
 const app = express();
@@ -48,9 +50,8 @@ app.get('/', function(req, res) {
 });
 
 app.get('/users', renderUsers);
-app.get('/users/:id', renderUserProfile);
+app.get('/users/profile/:id', renderUserProfile);
 
-// TODO:
 app.route('/users/edit/:id')
     .get((req, res, next) => {req.edit = true; next();}, renderUserProfile)
     .post(userEditPost);
@@ -59,11 +60,10 @@ app.route('/users/delete')
     .get(renderUserDelete)
     .post(userDeletePost);
 
-// TODO:
 app.route('/users/delete/:id')
-    .get()
-    .post();
+    .get(renderUserDelete);
 
+// TODO:
 app.route('/users/export')
     .get(renderUserExport)
     .post(userExportPost);

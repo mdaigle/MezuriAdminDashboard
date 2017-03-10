@@ -97,7 +97,7 @@ export async function userEditPost(req, res) {
         // TODO: show error somehow
     }
 
-    res.redirect(`/users/${req.params.id}`);
+    res.redirect(`/users/profile/${req.params.id}`);
 }
 
 export async function renderUserDelete(req, res) {

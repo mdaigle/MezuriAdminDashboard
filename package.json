@@ -1,10 +1,11 @@
 {
   "name": "mezuriadmindashboard",
   "version": "1.0.0",
-  "description": "Login <-> Node1 ```js {   ...,   credential: {     tenantId: \"\",     appId: \"\",     key: \"\"   } } ```",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf out && babel . -d out && cp -r views html css out/"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,6 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.15.0",
     "handlebars": "^4.0.6",
-    "jquery": "^3.1.1",
     "request": "^2.80.1",
     "request-promise-native": "^1.0.3"
   },
@@ -40,7 +40,9 @@
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-flow": "^6.23.0",
     "flow-bin": "^0.41.0",
+    "rimraf": "^2.6.1",
     "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.4.1"
+    "webpack-dev-server": "^2.4.1",
+    "webpack-merge": "^4.0.0"
   }
 }

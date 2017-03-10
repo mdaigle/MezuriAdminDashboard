@@ -5,9 +5,7 @@ const AssetsPlugin = require('assets-webpack-plugin');
 const assetsPluginInstance = new AssetsPlugin();
 
 module.exports = {
-    entry: {
-        $: 'jquery'
-    },
+    entry: {},
     output: {
         filename: '[chunkhash].[name].js',
         path: path.resolve(__dirname, 'dist')
@@ -32,7 +30,7 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
-            names: ['$', 'manifest']
+            names: ['manifest']
         }),
         assetsPluginInstance
     ],

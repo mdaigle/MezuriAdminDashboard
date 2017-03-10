@@ -10,7 +10,7 @@ const resourceUri = 'https://graph.microsoft.com/';
 const tokenUrl = 'http://localhost:5000/token';
 const webpackJsonPath = '../webpack-assets.json';
 
-export const scripts = JSON.parse(fs.readFileSync(path.resolve(__dirname, webpackJsonPath)));
+// export const scripts = JSON.parse(fs.readFileSync(path.resolve(__dirname, webpackJsonPath)));
 
 export function getJsByName(names) {
     return names.map((name) => ({ src: scripts[name].js }));

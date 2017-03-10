@@ -10,7 +10,7 @@
     <div id='groups'>
         {{#each this}}
         <div class='group' id='{{id}}'>
-            <h1>{{displayName}}</h1>
+            <a href='/groups/:{{id}}'>{{displayName}}</a>
 
             <ul>
             {{#each members}}
@@ -22,11 +22,6 @@
                 </li>
             {{/each}}
             </ul>
-
-            <div>
-                Add user:<input type='text' name='add-user-{{id}}'>
-                <button type='button'>Add</button>
-            </div>
         </div>
         {{/each}}
     </div>

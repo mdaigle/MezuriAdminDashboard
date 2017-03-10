@@ -11,7 +11,7 @@ function GraphClient(accessToken: string) {
     });
 }
 
-GraphClient.prototype.createSecurityGroup = function(group_name: string, callback: (input: MicrosoftGraph.Group) => void) {
+GraphClient.prototype.createSecurityGroup = function(group_name: string) {
     var content = {
       "displayName": group_name,
       "mailEnabled": false, //We don't want a mail group
@@ -19,15 +19,7 @@ GraphClient.prototype.createSecurityGroup = function(group_name: string, callbac
       "securityEnabled": true //Need this set to true to create a security group
     }
 
-    this.client.api('/groups')
-        .version("beta")
-        .post(content, (err, res) => {
-            if (err) {
-                console.log(err);
-            }
-            let group: MicrosoftGraph.Group = res.value;
-            callback(group);
-        });
+    return this.client.api('/groups').post(content);
 }
 
 GraphClient.prototype.createSecuritySubgroup = function(parent_group_id: string, child_group_name: string) {
@@ -37,44 +29,23 @@ GraphClient.prototype.createSecuritySubgroup = function(parent_group_id: string,
 }
 
 // Gets an array of group objects
-GraphClient.prototype.listGroups = function(callback: (input: MicrosoftGraph.Group[]) => void) {
-    this.client.api('/groups')
-        .get((err, response) => {
-            if (err) {
-                console.log(err);
-            }
-            let groups: MicrosoftGraph.Group[] = response.value;
-            callback(groups);
-        });
+GraphClient.prototype.listGroups = function() {
+    return this.client.api('/groups').get();
 }
 
-GraphClient.prototype.getGroup = function(id: string, callback: (input: MicrosoftGraph.Group) => void) {
+GraphClient.prototype.getGroup = function(id: string) {
     var path: string = '/groups/' + id;
-    this.client.api(path)
-        .get((err, response) => {
-            if (err) {
-                console.log(err);
-            }
-            let group: MicrosoftGraph.Group = response.value;
-            callback(group);
-        });
+    return this.client.api(path).get();
 }
 
-GraphClient.prototype.renameGroup = function(id: string, name: string, callback: (input: MicrosoftGraph.Group) => void) {
+GraphClient.prototype.renameGroup = function(id: string, name: string) {
     var path: string = '/groups/' + id;
 
     var content = {
       "displayName": name
     }
 
-    this.client.api(path)
-        .patch(content, (err, response) => {
-            if (err) {
-                console.log(err);
-            }
-            let group: MicrosoftGraph.Group = response.value;
-            callback(group);
-        });
+    return this.client.api(path).patch(content);
 }
 
 // Not currently supported by the API
@@ -88,86 +59,46 @@ GraphClient.prototype.renameGroup = function(id: string, name: string, callback:
     });
 }*/
 
-GraphClient.prototype.addMemberToGroup = function(group_id: string, user_id: string, callback: (input: Response) => void) {
+GraphClient.prototype.addMemberToGroup = function(group_id: string, user_id: string) {
     var path: string = '/groups/' + group_id + '/members/$ref';
     var user_uri: string = "https://graph.microsoft.com/v1.0/directoryObjects/" + user_id;
     var user_ref = {
         "@odata.id": user_uri
     }
-    this.client.api(path)
-        .post(user_ref, (err, response) => {
-            if (err) {
-                console.log(err);
-            }
-            let status: Response = response;
-            callback(status);
-        });
+    return this.client.api(path).post(user_ref);
 }
 
 //TODO: is this transitive?
 GraphClient.prototype.removeMemberFromGroup = function(group_id, user_id) {
     var path = '/groups/' + group_id + '/members/' + user_id + '/$ref';
-    /*var user_uri = "https://graph.microsoft.com/v1.0/directoryObjects/" + user_id;
-    var user_ref = {
-        "@odata.id": user_uri
-    }*/
-    this.api.delete(path, (err, response) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log(response);
-    });
+    return this.api(path).delete();
 }
 
 
-GraphClient.prototype.listGroupMembers = function(group_id: string, callback: (input: MicrosoftGraph.DirectoryObject[]) => void) {
+GraphClient.prototype.listGroupMembers = function(group_id: string) {
     var path: string = '/groups/' + group_id + '/members';
-
-    this.client.api(path)
-        .get((err, response) => {
-        if (err) {
-            console.log(err);
-        }
-        let members: MicrosoftGraph.DirectoryObject[] = response.value;
-        callback(response.value);
-    });
+    return this.client.api(path).get();
 }
 
-GraphClient.prototype.getUser = function(user_id: string, callback: (input: MicrosoftGraph.User) => void) {
+GraphClient.prototype.getUser = function(user_id: string) {
     var path: string = '/users/' + user_id;
-    this.api.get(path, (err, response) => {
-        if (err) {
-            console.log(err);
-        }
-
-        let user: MicrosoftGraph.User = response.value;
-        callback(user);
-    });
+    return this.api(path).get();
 }
 
-GraphClient.prototype.listUsers = function(callback: (input: MicrosoftGraph.User[]) => void) {
-    this.api.get('/users', (err, response) => {
-        if (err) {
-            console.log(err);
-        }
-        let users: MicrosoftGraph.User[] = response.value;
-        callback(users);
-    });
+GraphClient.prototype.listUsers = function(filter?) {
+    if (filter) {
+        return this.api('/users' + filter).get();
+    }
+    return this.api('/users').get();
 }
 
 // This is transitive
-GraphClient.prototype.listUserGroupMembership = function(user_id: string, callback: (input: string[]) => void) {
+GraphClient.prototype.listUserGroupMembership = function(user_id: string) {
     var path = '/users/' + user_id + '/getMemberGroups';
-    this.api.get(path, (err, response) => {
-        if (err) {
-            console.log(err);
-        }
-        let memberIds: string[] = response.value;
-        callback(memberIds);
-    });
+    return this.api(path).get();
 }
 
-GraphClient.prototype.createUser = function(username: string, password: string, callback: (input: MicrosoftGraph.User) => void) {
+GraphClient.prototype.createUser = function(username: string, password: string) {
     let displayName: string = username;
     let mailNickname: string = displayName + "-mail";
 
@@ -182,26 +113,10 @@ GraphClient.prototype.createUser = function(username: string, password: string, 
         }
     }
 
-    //console.log(content);
-
-    this.client.api('/users')
-        .post(content, (err, response) => {
-            if (err) {
-                console.log(err);
-            }
-            let user: MicrosoftGraph.User = response;
-            callback(response);
-        });
+    return this.client.api('/users').post(content);
 }
 
-GraphClient.prototype.deleteUser = function(id: string, callback: (status: Response) => void) {
+GraphClient.prototype.deleteUser = function(id: string) {
     let path: string = '/users/' + id;
-    this.client.api(path)
-        .delete((err, response) => {
-            if (err) {
-                console.log(err);
-            }
-            let status: Response = response;
-            callback(status);
-        });
+    return this.client.api(path).delete();
 }

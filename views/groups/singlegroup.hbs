@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Groups</title>
+</head>
+<body>
+    <p>{{displayName}}</p>
+
+    <ul>
+    {{#each members}}
+        <li>
+            <div id='{{id}}'>
+                <p>{{displayName}}</p>
+                <a href='/groups/delete/{{this.id}}/{{id}}'>Remove User</a>
+            </div>
+        </li>
+    {{/each}}
+    </ul>
+
+    <div>
+        <form action='/groups/addUser/{{id}}' method='post'>
+            Email: <input type='text' name='email'>
+            <input type='submit'>Add User</button>
+        </form>
+    </div>
+</body>
+</html>

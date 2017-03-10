@@ -2,5 +2,6 @@ node_modules/
 dist/
 webpack-assets.json
 out/
+graphclient.js
 
 .idea/

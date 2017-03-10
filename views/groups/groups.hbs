@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Groups</title>
+</head>
+<body>
+    <div id='groups_header'>
+        <h1>Groups</h1>
+    </div>
+    <div id='groups'>
+        {{#each this}}
+        <div class='group' id='{{id}}'>
+            <a href='/groups/:{{id}}'>{{displayName}}</a>
+
+            <ul>
+            {{#each members}}
+                <li>
+                    <div id='{{id}}'>
+                        <p>{{displayName}}</p>
+                        <!-- Button to remove user? -->
+                    </div>
+                </li>
+            {{/each}}
+            </ul>
+        </div>
+        {{/each}}
+    </div>
+</body>
+</html>

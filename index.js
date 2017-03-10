@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 
 const express = require('express');
 const cons = require('consolidate');
+var GraphClient = require('graphclient.ts');
 
 import { inspect } from 'util';
 inspect.defaultOptions = {
@@ -44,6 +45,8 @@ app.use(async (req, res, next) => {
 
 import { renderUsers, renderUserProfile, userEditPost, renderUserDelete, userDeletePost } from './js/users';
 
+import {renderGroups, renderSingleGroup, addUserToGroup} from './js/groups';
+
 app.get('/', function(req, res) {
     res.sendFile('index.html');
 });
@@ -58,6 +61,10 @@ app.route('/users/edit/:id')
 app.route('/users/delete')
     .get(renderUserDelete)
     .post(userDeletePost);
+
+app.get('/groups', renderGroups);
+app.get('/groups/:groupid', renderSingleGroup);
+app.post('/groups/:groupid/addUser/:email', addUserToGroup);
 
 // We can change this to whatever port
 app.listen(3000);

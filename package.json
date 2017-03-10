@@ -43,6 +43,10 @@
     "rimraf": "^2.6.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1",
-    "webpack-merge": "^4.0.0"
+    "webpack-merge": "^4.0.0",
+    "@microsoft/microsoft-graph-client": "^0.3.1",
+    "@microsoft/microsoft-graph-types": "^0.4.1",
+    "@types/node": "^7.0.5",
+    "typescript": "^2.2.1"
   }
 }

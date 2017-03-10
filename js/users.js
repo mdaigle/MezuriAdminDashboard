@@ -1,7 +1,5 @@
 'use strict';
 
-// import { getJsByName } from './util';
-
 export async function renderUsers(req, res) {
     let userFields = ['displayName', 'id', 'userPrincipalName'];
     let groupFields = ['displayName', 'id'];
@@ -48,10 +46,15 @@ export async function renderUserProfile(req, res) {
         userPrincipalName: true
     };
 
-    let profile = await req.graphClient
-        .api(`/users/${req.params.id}`)
-        .select(Object.keys(profileFields))
-        .get();
+    let profile;
+    try {
+        profile = await req.graphClient
+            .api(`/users/${req.params.id}`)
+            .select(Object.keys(profileFields))
+            .get();
+    } catch (err) {
+        console.error(err);
+    }
 
     let ctx = Object
         .entries(profileFields)
@@ -133,14 +136,6 @@ export async function userDeletePost(req, res) {
     }
 
     res.redirect('/users/delete');
-}
-
-export async function renderUserExport(req, res) {
-
-}
-
-export async function userExportPost(req, res) {
-
 }
 
 async function listUsers(client, fields) {

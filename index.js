@@ -42,8 +42,7 @@ app.use(async (req, res, next) => {
     next();
 });
 
-import { renderUsers, renderUserProfile, userEditPost,
-    renderUserDelete, userDeletePost, renderUserExport, userExportPost } from './js/users';
+import { renderUsers, renderUserProfile, userEditPost, renderUserDelete, userDeletePost } from './js/users';
 
 app.get('/', function(req, res) {
     res.sendFile('index.html');
@@ -59,14 +58,6 @@ app.route('/users/edit/:id')
 app.route('/users/delete')
     .get(renderUserDelete)
     .post(userDeletePost);
-
-app.route('/users/delete/:id')
-    .get(renderUserDelete);
-
-// TODO:
-app.route('/users/export')
-    .get(renderUserExport)
-    .post(userExportPost);
 
 // We can change this to whatever port
 app.listen(3000);

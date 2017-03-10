@@ -1,34 +1,36 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>{{displayName}} | User Profile</title>
+    <title>{{profile.displayName.value}} | User Profile</title>
     {{#each scripts}}
         <script type="text/javascript" src="{{this.src}}" {{this.attribute}}></script>
     {{/each}}
 </head>
 <body>
 <div id="user-profile-header">
-    <h1>{{displayName}}'s Profile</h1>
+    <h1>{{profile.displayName.value}}'s Profile</h1>
 </div>
 <div id="user-profile-actions">
-    <a href="/users/edit/{{id}}">Edit</a>
-    <a href="/users/delete/{{id}}">Delete</a>
+    <a href="/users/edit/{{profile.id.value}}">Edit</a>
+    <a href="/users/delete/{{profile.id.value}}">Delete</a>
 </div>
 <div id="user-profile">
-    {{#each profileMap}}
-        <div class="profile-item">
-            <label>{{this.itemLabel}}:</label>
-            {{#if @root.edit}}
-                <input name="{{this.itemLabel}}" value="{{lookup @root this.itemKey}}">
-            {{else}}
-                <span>{{lookup @root this.itemKey}}</span>
-            {{/if}}
-        </div>
-    {{/each}}
+    <form method="post">
+        {{#each profile as |data key|}}
+            <div class="profile-item">
+                <label for="{{key}}">{{data.label}}:</label>
+                {{#if @root.edit}}
+                    <input {{data.disabled}} name="{{key}}" id="{{key}}" value="{{data.value}}">
+                {{else}}
+                    <span>{{data.value}}</span>
+                {{/if}}
+            </div>
+        {{/each}}
 
-    {{#if @root.edit}}
-        <input type="submit" value="Modify">
-    {{/if}}
+        {{#if @root.edit}}
+            <input type="submit" value="Modify">
+        {{/if}}
+    </form>
 </div>
 </body>
 </html>

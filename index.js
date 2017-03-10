@@ -40,7 +40,7 @@ app.use(async (req, res, next) => {
     next();
 });
 
-import { renderUsers, renderUserProfile, userEditPost
+import { renderUsers, renderUserProfile, userEditPost,
     renderUserDelete, userDeletePost, renderUserExport, userExportPost } from './js/users';
 
 app.get('/', function(req, res) {

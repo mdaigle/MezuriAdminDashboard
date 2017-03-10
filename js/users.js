@@ -43,20 +43,58 @@ export async function renderUserProfile(req, res) {
         accountEnabled: 'Account Enabled'
     };
 
-    let profile = req.graphClient
+    let disabledFields = {
+        id: true,
+        userPrincipalName: true
+    };
+
+    let profile = await req.graphClient
         .api(`/users/${req.params.id}`)
         .select(Object.keys(profileFields))
         .get();
 
-    let profileMap = Object
+    let ctx = Object
         .entries(profileFields)
-        .map((entry) => ({itemKey: entry[0], itemLabel: entry[1]}));
+        .map((pair) => ({
+            [pair[0]]: {
+                label: pair[1],
+                value: profile[pair[0]],
+                disabled: disabledFields[pair[0]] ? "disabled" : undefined
+            }
+        }))
+        .reduceRight((prev, curr) => Object.assign(curr, prev), {});
 
-    res.render('users/user-profile.hbs', Object.assign(await profile, {profileMap: profileMap}, {edit: req.edit}))
+    res.render('users/user-profile.hbs', {
+        profile: ctx,
+        edit: req.edit
+    });
 }
 
 export async function userEditPost(req, res) {
+    let fields = ['surname', 'givenName', 'displayName', 'userType', 'accountEnabled'];
 
+    let data = fields
+        .map((f) => ({
+            [f]: req.body[f]
+        }))
+        .reduce((prev, curr) => Object.assign(curr, prev), {});
+
+    try {
+        data.accountEnabled = JSON.parse(data.accountEnabled);
+    } catch (err) {
+        data.accountEnabled = false;
+    }
+
+    try {
+        await req.graphClient
+            .api(`/users/${req.params.id}`)
+            .patch(data);
+    } catch (err) {
+        console.error(err);
+        // TODO: show error somehow
+    }
+
+    res.redirect(`/users/${req.params.id}`);
 }
 
 export async function renderUserDelete(req, res) {

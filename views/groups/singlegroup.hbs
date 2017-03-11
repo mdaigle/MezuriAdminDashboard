@@ -2,25 +2,36 @@
 <html>
 <head>
     <title>Groups</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
-    <p>{{displayName}}</p>
+    <h3>{{displayName}}</h3>
+    <table class='table'>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Remove</th>
+        </tr>
+        {{#each members}}
+            <tr>
+                <td>{{displayName}}</td>
+                <td>{{mail}}</td>
+                <td>
+                    <a href='/groups/delete/{{this.id}}/{{id}}'>&#10006;</a>
+                </td>
+            </tr>
 
-    <ul>
-    {{#each members}}
-        <li>
-            <div id='{{id}}'>
-                <p>{{displayName}}</p>
-                <a href='/groups/delete/{{this.id}}/{{id}}'>Remove User</a>
-            </div>
-        </li>
-    {{/each}}
-    </ul>
+        {{/each}}
+    </table>
 
     <div>
         <form action='/groups/addUser/{{id}}' method='post'>
-            Email: <input type='text' name='email'>
-            <input type='submit'>Add User</button>
+            <select name='user'>
+                {{#each allUsers}}
+                    <option value='{{id}}'>{{displayName}}</option>
+                {{/each}}
+            </select>
+            <input type='submit' value='Add User'></button>
         </form>
     </div>
 </body>

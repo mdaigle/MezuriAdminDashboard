@@ -1,19 +1,39 @@
 'use strict';
 
 export async function renderGroups(req, res) {
-    let groups = await req.graphclient.listGroups();
+    let groups;
+    try {
+        groups = await req.graphclient.api('/groups/').get();
+        groups = groups.value;
+    } catch (err) {
+        console.log(err);
+    }
 
-    groups.forEach(async function(group, i) {
-        groups[i].members = await req.graphclient.listGroupMembers(group.id);
+    let promises = [];
+
+    groups.forEach(function(group, i) {
+        let path = '/groups/' + group.id + '/members';
+        promises[i] = req.graphclient.api(path).get();
     });
 
-    res.render('groups.hbs', groups);
+    let members = await Promise.all(promises);
+
+    groups.forEach(function(group, i) {
+        groups[i].members = members[i].value;
+    });
+
+    res.render('groups/groups.hbs', groups);
 }
 
 export async function renderSingleGroup(req, res) {
-    let group = await req.graphclient.getGroup(req.params.groupid);
-    group.members = await req.graphclient.listGroupMembers(group.id);
-    res.render('singlegroup.hbs', group);
+    try {
+        let group = await req.graphclient.api('/groups/' + req.params.groupid).get();
+        group.members = (await req.graphclient.api('/groups/' + group.id + '/members').get()).value;
+        group.allUsers = (await req.graphclient.api('/users/').get()).value;
+        res.render('groups/singlegroup.hbs', group);
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export async function addUserToGroup(req, res) {
@@ -21,4 +41,8 @@ export async function addUserToGroup(req, res) {
     let uid = user.value[0].id;
     await req.graphclient.addMemberToGroup(req.params.groupid, uid);
     res.redirect('/groups/' + req.params.groupid);
+}
+
+export async function removeUserFromGroup(req, res) {
+
 }

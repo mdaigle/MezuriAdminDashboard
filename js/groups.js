@@ -4,22 +4,21 @@ export async function renderGroups(req, res) {
     let groups;
     try {
         groups = await req.graphclient.api('/groups/').get();
-        groups = groups.value;
     } catch (err) {
         console.log(err);
     }
 
     let promises = [];
 
-    groups.forEach(function(group, i) {
+    groups.value.forEach(function(group, i) {
         let path = '/groups/' + group.id + '/members';
         promises[i] = req.graphclient.api(path).get();
     });
 
     let members = await Promise.all(promises);
 
-    groups.forEach(function(group, i) {
-        groups[i].members = members[i].value;
+    groups.value.forEach(function(group, i) {
+        groups.value[i].members = members[i].value;
     });
 
     res.render('groups/groups.hbs', groups);

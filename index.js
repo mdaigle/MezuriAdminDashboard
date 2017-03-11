@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 
 const express = require('express');
 const cons = require('consolidate');
-var GraphClient = require('graphclient.ts');
+var GraphClient = require('./graphclient.js');
 
 import { inspect } from 'util';
 inspect.defaultOptions = {
@@ -36,6 +36,7 @@ app.use(async (req, res, next) => {
     try {
         req.token = await getToken(req);
         req.graphClient = getGraphClient(req.token);
+        req.graphclient = GraphClient(req.token);
     } catch (err) {
         console.error(err);
         res.redirect('http://localhost:5000');

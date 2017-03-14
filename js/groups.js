@@ -26,7 +26,8 @@ export async function renderGroups(req, res) {
 
 export async function renderSingleGroup(req, res) {
     try {
-        let group = await req.graphclient.api('/groups/' + req.params.groupid).get();
+        let group = await req.graphclient.api('/groups/' + req.params.group_id).get();
+        group.group_id = group.id;
         group.members = (await req.graphclient.api('/groups/' + group.id + '/members').get()).value;
         group.allUsers = (await req.graphclient.api('/users/').get()).value;
         res.render('groups/singlegroup.hbs', group);
@@ -35,13 +36,51 @@ export async function renderSingleGroup(req, res) {
     }
 }
 
+export async function addGroup(req, res) {
+    try {
+        let group_name = req.body.add_group_name;
+
+        let content = {
+          "displayName": group_name,
+          "mailEnabled": false, //We don't want a mail group
+          "mailNickname": "testMail",
+          "securityEnabled": true //Need this set to true to create a security group
+        }
+
+        let group = await req.graphclient.api('/groups').post(content);
+        res.redirect('/groups');
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 export async function addUserToGroup(req, res) {
-    let users = await req.graphclient.listUsers("$mail eq " + req.params.email);
-    let uid = user.value[0].id;
-    await req.graphclient.addMemberToGroup(req.params.groupid, uid);
-    res.redirect('/groups/' + req.params.groupid);
+    let uid = req.body.user_id;
+    let group_id = req.params.group_id;
+
+    let path: string = '/groups/' + group_id + '/members/$ref';
+    let user_uri: string = "https://graph.microsoft.com/v1.0/directoryObjects/" + uid;
+    let user_ref = {
+        "@odata.id": user_uri
+    };
+
+    await req.graphclient.api(path).post(user_ref);
+    res.redirect('/groups/' + group_id);
 }
 
 export async function removeUserFromGroup(req, res) {
+    let user_id = req.params.user_id;
+    let group_id = req.params.group_id;
 
+    let user_uri = "https://graph.microsoft.com/v1.0/directoryObjects/" + user_id;
+    let user_ref = {
+        "@odata.id": user_uri
+    };
+
+    let path = '/groups/' + group_id + '/members/$ref';
+
+    let api = req.graphclient.api(path);
+    console.log(api);
+    //.body(user_ref).delete();
+    res.redirect('/groups/' + group_id);
 }

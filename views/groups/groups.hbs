@@ -17,9 +17,17 @@
         </div>
     </nav>
 
-    <div id='groups_header' class='text-center' style='padding-left:10px;'>
+    <div id='groups-header' class='text-center' style='padding-left:10px;'>
         <h3>Groups</h3>
     </div>
+
+    <div id='add-group-form' style='padding-left:10px;'>
+        <form action='/groups' method='post'>
+            <input type='text' name='add_group_name' placeholder='Add Group'>
+            <button type='submit' class='btn btn-primary btn-xs' style='margin:10px'><span class='glyphicon glyphicon-plus' aria-hidden='true'></button>
+        </form>
+    </div>
+
     <div id='groups' style='padding-left:10px; padding-right:10px'>
         {{#each value}}
             <div class='group' id='{{id}}'>

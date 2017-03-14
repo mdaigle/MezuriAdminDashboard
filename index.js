@@ -36,7 +36,7 @@ app.use(async (req, res, next) => {
     try {
         req.token = await getToken(req);
         req.graphClient = getGraphClient(req.token);
-        req.graphclient = GraphClient(req.token);
+        req.graphclient = new GraphClient(req.token);
     } catch (err) {
         console.error(err);
         res.redirect('http://localhost:5000');
@@ -46,7 +46,7 @@ app.use(async (req, res, next) => {
 
 import { renderUsers, renderUserProfile, userEditPost, renderUserDelete, userDeletePost } from './js/users';
 
-import {renderGroups, renderSingleGroup, addUserToGroup} from './js/groups';
+import {renderGroups, renderSingleGroup, addGroup, addUserToGroup, removeUserFromGroup} from './js/groups';
 
 app.get('/', function(req, res) {
     res.sendFile('index.html');
@@ -64,8 +64,10 @@ app.route('/users/delete')
     .post(userDeletePost);
 
 app.get('/groups', renderGroups);
-app.get('/groups/:groupid', renderSingleGroup);
-app.post('/groups/:groupid/addUser/:email', addUserToGroup);
+app.post('/groups', addGroup);
+app.get('/groups/:group_id', renderSingleGroup);
+app.post('/groups/:group_id/addUser', addUserToGroup);
+app.get('/groups/:group_id/removeUser/:user_id', removeUserFromGroup);
 
 // We can change this to whatever port
 app.listen(3000);

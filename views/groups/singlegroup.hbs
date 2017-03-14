@@ -29,21 +29,20 @@
                 <td>{{displayName}}</td>
                 <td>{{userPrincipalName}}</td>
                 <td>
-                    <a href='/groups/delete/{{this.id}}/{{id}}'>&#10006;</a>
+                    <a href='/groups/{{@root.id}}/removeUser/{{id}}'>&#10006;</a>
                 </td>
             </tr>
-
         {{/each}}
     </table>
 
     <div>
-        <form action='/groups/addUser/{{id}}' method='post'>
-            <select name='user' style='margin:10px'>
+        <form action='/groups/{{this.id}}/addUser' method='post'>
+            <select name='user_id' style='margin:10px'>
                 {{#each allUsers}}
                     <option value='{{id}}'>{{displayName}}</option>
                 {{/each}}
             </select>
-            <input type='submit' value='Add User' style='margin:10px'></button>
+            <input type='submit' value='Add User' style='margin:10px'>
         </form>
     </div>
 </body>

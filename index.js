@@ -1,12 +1,10 @@
 'use strict';
 
-const bodyParser = require('body-parser');
+import express from 'express';
+
+import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser';
-
-const express = require('express');
 import { __express as pug } from 'pug';
-
-const GraphClient = require('./ts_out/graphclient.js');
 
 import { inspect } from 'util';
 inspect.defaultOptions = {
@@ -19,6 +17,22 @@ inspect.defaultOptions = {
 process.on('unhandledRejection', r => console.log(r)); // turns on detailed error/warning
 
 import { getToken, getGraphClient } from './js/util';
+import GraphClient from './ts_out/graphclient.js'
+
+import {
+    renderUsers,
+    renderUserProfile,
+    userEditPost,
+    renderUserDelete,
+    userDeletePost
+} from './js/users';
+import {
+    renderGroups,
+    renderSingleGroup,
+    addGroup,
+    addUserToGroup,
+    removeUserFromGroup
+} from './js/groups';
 
 const app = express();
 
@@ -68,9 +82,6 @@ app.use(async (req, res, next) => {
     }
     next();
 });
-
-import { renderUsers, renderUserProfile, userEditPost, renderUserDelete, userDeletePost } from './js/users';
-import {renderGroups, renderSingleGroup, addGroup, addUserToGroup, removeUserFromGroup} from './js/groups';
 
 app.get('/', (req, res) => {
     res.render('index');

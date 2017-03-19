@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,21 +14,20 @@
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
-  <body>
-      <!-- These link refs will have to change -->
-      <div class="container">
-          <div class="row">
-              <div id="groups" class='col-md-6 text-center'>
-                  <a href="/groups">Groups</a>
-              </div>
-              <div id="users" class='col-md-6 text-center'>
-                  <a href="/users">Users</a>
-              </div>
-          </div>
-      </div>
-  </body>
+</head>
+<body>
+<!-- These link refs will have to change -->
+<div class="container">
+    <div class="row text-center">
+        {{#each pages}}
+            <div class="text-center index-item">
+                <a href="{{this.href}}">{{this.name}}</a>
+            </div>
+        {{/each}}
+    </div>
+</div>
+</body>
 </html>

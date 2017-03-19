@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 
 const express = require('express');
 const cons = require('consolidate');
-var GraphClient = require('./ts_out/graphclient.js');
+const GraphClient = require('./ts_out/graphclient.js');
 
 import { inspect } from 'util';
 inspect.defaultOptions = {
@@ -49,7 +49,26 @@ import { renderUsers, renderUserProfile, userEditPost, renderUserDelete, userDel
 import {renderGroups, renderSingleGroup, addGroup, addUserToGroup, removeUserFromGroup} from './js/groups';
 
 app.get('/', function(req, res) {
-    res.sendFile('index.html');
+    res.render('index.hbs', {
+        pages: [
+            {
+                name: 'ODK 2 Sync',
+                href: '/sync'
+            },
+            {
+                name: 'Jupyter',
+                href: '/jupyter'
+            },
+            {
+                name: 'Users',
+                href: '/users'
+            },
+            {
+                name: 'Groups',
+                href: '/groups'
+            }
+        ]
+    });
 });
 
 app.get('/users', renderUsers);
@@ -68,6 +87,10 @@ app.post('/groups', addGroup);
 app.get('/groups/:group_id', renderSingleGroup);
 app.post('/groups/:group_id/addUser', addUserToGroup);
 app.get('/groups/:group_id/removeUser/:user_id', removeUserFromGroup);
+
+// TODO:
+app.get('/sync');
+app.get('/jupyter', (req, res) => res.redirect('JUPYTERHUB_URL'));
 
 // We can change this to whatever port
 app.listen(3000);

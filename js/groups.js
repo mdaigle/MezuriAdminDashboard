@@ -21,7 +21,7 @@ export async function renderGroups(req, res) {
         groups.value[i].members = members[i].value;
     });
 
-    res.render('groups/groups.hbs', groups);
+    res.render('groups/groups', groups);
 }
 
 export async function renderSingleGroup(req, res) {
@@ -30,7 +30,7 @@ export async function renderSingleGroup(req, res) {
         group.group_id = group.id;
         group.members = (await req.graphclient.api('/groups/' + group.id + '/members').get()).value;
         group.allUsers = (await req.graphclient.api('/users/').get()).value;
-        res.render('groups/singlegroup.hbs', group);
+        res.render('groups/singlegroup', group);
     } catch (err) {
         console.log(err);
     }

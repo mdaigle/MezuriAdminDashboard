@@ -1,0 +1,24 @@
+extends ../shared/page-layout.pug
+
+block vars
+    - var title = 'Groups'
+    - var sectionId = 'groups'
+
+block append content
+    div(id='add-group-form', style='padding-left: 10px;')
+        form(action='/groups', method='post')
+            input(type='text', name='add_group_name', placeholder='Add Group')
+            button(type='submit', class=['btn', 'btn-primary', 'btn-xs'], style='margin: 10px;')
+                span(class=['glyphicon', 'glyphicon-plus'], aria-hidden=true)
+
+    div(id=sectionId)
+        each group in value
+            div(class='group', id=group.id)
+                p(class='h4')= group.displayName
+                    span(style='display:inline-block; width:10px;')
+                    a(href=`/groups/${group.id}`): span(class=['glyphicon', 'glyphicon-pencil'], aria-hidden=true)
+
+                ul(class='list-group')
+                    each member in group.members
+                        li(class='list-group-item')
+                            div(id=member.id): p= member.displayName

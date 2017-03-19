@@ -21,7 +21,7 @@ export async function renderUsers(req, res) {
         console.error(err);
     }
 
-    res.render('users/users.hbs', {
+    res.render('users/users', {
         users: userList.map((user) => Object.assign({},
             user,
             { directMemberOf: directMember[user.id] },
@@ -67,7 +67,7 @@ export async function renderUserProfile(req, res) {
         }))
         .reduceRight((prev, curr) => Object.assign(curr, prev), {});
 
-    res.render('users/user-profile.hbs', {
+    res.render('users/user-profile', {
         profile: ctx,
         edit: req.edit
     });
@@ -113,7 +113,7 @@ export async function renderUserDelete(req, res) {
     }
 
     try {
-        res.render('users/user-delete.hbs', {
+        res.render('users/user-delete', {
             userList: await listUsers(req.graphClient, ['displayName', 'id', 'userPrincipalName']),
             deleteList: deleteList
         });

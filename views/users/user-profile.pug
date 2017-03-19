@@ -1,0 +1,25 @@
+extends ../shared/page-layout.pug
+
+block vars
+    - var title = `${profile.displayName.value}'s Profile`
+    - var sectionId = 'user-profile'
+
+block append content
+    div(id=`${sectionId}-actions`)
+        a(href='/users', style='padding:5px') Back to user list
+        a(href=`/users/edit/${profile.id.value}`, style='padding:5px') Edit
+        a(href=`/users/delete?id=${profile.id.value}`, style='padding:5px') Delete
+
+    div(id=sectionId)
+        form(method='post')
+            table(class='table')
+                each value, key in profile
+                    tr(class='profile-item')
+                        td= value.label
+                        if edit
+                            td: input(disabled=value.disabled, name=key, id=key, value=value.value)
+                        else
+                            td= value.value
+
+            if edit
+                input(type='submit', value='Modify')

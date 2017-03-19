@@ -1,0 +1,25 @@
+extends ../shared/page-layout.pug
+
+block vars
+    - var title = 'Delete Users'
+    - var sectionId = 'user-delete'
+
+block append content
+    div(id=`${sectionId}-actions`)
+        a(href='/users', style='padding:10px') Back to user list
+
+    div(id=sectionId)
+        form(method='post')
+            table(class='table')
+                tr
+                    th Delete?
+                    th Display Name
+                    th Principal Name
+
+                each user in userList
+                    tr(class='delete-row')
+                        td: input(type='checkbox', name=user.id, id=user.id checked=deleteList[user.id])
+                        td= user.displayName
+                        td= user.userPrincipalName
+
+            input(type='submit', value='Delete')

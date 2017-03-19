@@ -1,0 +1,12 @@
+extends layout.pug
+
+block content
+    nav(class=['navbar', 'navbar-default'], id='links')
+        div(id='container-fluid')
+            a(class='navbar-brand', href='/') Mezuri
+        ul(class=['nav', 'navbar-nav'])
+            each page in pages
+                li: a(href=page.href, class='nav')= page.name
+
+    div(class='text-center', id=`${sectionId}_header`)
+        h3= title

@@ -1,0 +1,25 @@
+extends ../shared/page-layout.pug
+
+block vars
+    - var title = displayName
+    - var sectionId = 'groups'
+
+block append content
+    table(class='table')
+        tr
+            th Display Name
+            th Principal Name
+            th Remove
+
+        each member in members
+            tr
+                td= member.displayName
+                td= member.userPrincipalName
+                td: a(href=`/groups/${id}/removeUser/${member.id}`) ✖
+
+    div
+        form(action=`/groups/${id}/addUser`, method='post')
+            select(name='user_id', style='margin:10px;')
+                each user in allUsers
+                    option(value=user.id)= user.displayName
+            input(type='submit', value='Add User', style='margin:10px;')

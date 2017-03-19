@@ -7,7 +7,7 @@ block vars
 //-block append stylesheets
 //-    link(rel='stylesheet', href='users.css')
 
-block append content
+block content-container
     a(href='/users/delete', style='padding:10px;')
         span(class=['glyphicon', 'glyphicon-pencil'], aria-hidden='true')
 
@@ -22,10 +22,10 @@ block append content
                 tr(class='user')
                     td: a(href=`/users/profile/${user.id}`)= user.displayName
                     td(class='direct-member-of-list')
-                        div(class='member-of')
-                            each group in user.directMemberOf
+                        each group in user.directMemberOf
+                            div(class='member-of')
                                 p= group.displayName
                     td(class='transitive-member-of-list')
-                        div(class='member-of')
-                            each group in user.transitiveMemberOf
+                        each group in user.transitiveMemberOf
+                            div(class='member-of')
                                 p= group.displayName

@@ -4,10 +4,13 @@ block vars
     - var title = `${profile.displayName.value}'s Profile`
     - var sectionId = 'user-profile'
 
-block append content
+block content-container
     div(id=`${sectionId}-actions`)
         a(href='/users', style='padding:5px') Back to user list
-        a(href=`/users/edit/${profile.id.value}`, style='padding:5px') Edit
+        if edit
+            a(href=`/users/profile/${profile.id.value}`, style='padding:5px') Profile
+        else
+            a(href=`/users/edit/${profile.id.value}`, style='padding:5px') Edit
         a(href=`/users/delete?id=${profile.id.value}`, style='padding:5px') Delete
 
     div(id=sectionId)
@@ -17,7 +20,7 @@ block append content
                     tr(class='profile-item')
                         td= value.label
                         if edit
-                            td: input(disabled=value.disabled, name=key, id=key, value=value.value)
+                            td: input(disabled=value.disabled, name=key, id=key, value=value.value, style='width: 100%;')
                         else
                             td= value.value
 

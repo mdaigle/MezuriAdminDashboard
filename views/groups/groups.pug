@@ -4,7 +4,7 @@ block vars
     - var title = 'Groups'
     - var sectionId = 'groups'
 
-block append content
+block content-container
     div(id='add-group-form', style='padding-left: 10px;')
         form(action='/groups', method='post')
             input(type='text', name='add_group_name', placeholder='Add Group')

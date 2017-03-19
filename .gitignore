@@ -1,7 +1,8 @@
 node_modules/
 dist/
-webpack-assets.json
 out/
-graphclient.js
+ts_out/
+
+webpack-assets.json
 
 .idea/

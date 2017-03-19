@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 
 const express = require('express');
 const cons = require('consolidate');
-var GraphClient = require('./graphclient.js');
+var GraphClient = require('./ts_out/graphclient.js');
 
 import { inspect } from 'util';
 inspect.defaultOptions = {

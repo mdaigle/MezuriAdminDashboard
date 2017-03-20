@@ -30,7 +30,7 @@ import {
     renderGroups,
     renderSingleGroup,
     addGroup,
-    addUserToGroup,
+    addMemberToGroup,
     removeUserFromGroup
 } from './js/groups';
 import {
@@ -107,7 +107,7 @@ app.route('/users/delete')
 app.get('/groups', renderGroups);
 app.post('/groups', addGroup);
 app.get('/groups/:group_id', renderSingleGroup);
-app.post('/groups/:group_id/addUser', addUserToGroup);
+app.post('/groups/:group_id/addUser', addMemberToGroup);
 app.get('/groups/:group_id/removeUser/:user_id', removeUserFromGroup);
 
 app.route('/sync')

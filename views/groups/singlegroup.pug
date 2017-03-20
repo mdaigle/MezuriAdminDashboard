@@ -22,7 +22,10 @@ block content-container
             select(name='user_id', style='margin: 10px;')
                 each user in users
                     option(value=user.id)= user.displayName
+            input(type='submit', value='Add User', disabled=isDynamic, style='margin:10px;')
+
+        form(action=`/groups/${id}/addUser`, method='post')
             select(name='group_id', style='margin: 10px;')
                 each group in groups
                     option(value=group.id)= group.displayName
-            input(type='submit', value='Add Member', style='margin:10px;')
+            input(type='submit', value='Add Group', disabled=isDynamic, style='margin:10px;')

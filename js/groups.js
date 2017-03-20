@@ -49,6 +49,7 @@ export async function renderSingleGroup(req, res) {
         group.group_id = group.id;
         group.members = (await req.graphclient.api('/groups/' + group.id + '/members').get()).value;
 
+        // TODO: run the next 3 asyncs in parallel
         let memberIdSet = new Set(group.members.map(m => m.id));
         group.users = (await req.graphclient.api('/users/').get())
             .value
@@ -56,6 +57,10 @@ export async function renderSingleGroup(req, res) {
         group.groups = (await req.graphclient.api('/groups/').get())
             .value
             .filter(u => !memberIdSet.has(u.id) && u.id !== group.group_id);
+
+        group.isDynamic = await isDynamicGroup(req.graphclient, group.group_id);
+
+        console.log(group);
         res.render('groups/singlegroup', group);
     } catch (err) {
         console.log(err);
@@ -85,17 +90,19 @@ export async function addGroup(req, res) {
     }
 }
 
-export async function addUserToGroup(req, res) {
-    let uid = req.body.user_id;
+export async function addMemberToGroup(req, res) {
+    let oid = req.body.user_id || req.body.group_id;
     let group_id = req.params.group_id;
 
-    let path: string = '/groups/' + group_id + '/members/$ref';
-    let user_uri: string = "https://graph.microsoft.com/v1.0/directoryObjects/" + uid;
-    let user_ref = {
-        "@odata.id": user_uri
-    };
+    if (!isDynamicGroup(req.graphclient, group_id)) {
+        let path: string = '/groups/' + group_id + '/members/$ref';
+        let obj_uri: string = "https://graph.microsoft.com/v1.0/directoryObjects/" + oid;
+        let obj_ref = {
+            "@odata.id": obj_uri
+        };
 
-    await req.graphclient.api(path).post(user_ref);
+        await req.graphclient.api(path).post(obj_ref);
+    }
     res.redirect('/groups/' + group_id);
 }
 
@@ -103,13 +110,21 @@ export async function removeUserFromGroup(req, res) {
     let user_id = req.params.user_id;
     let group_id = req.params.group_id;
 
-    let path = `/groups/${group_id}/members/${user_id}/$ref`;
+    if (!isDynamicGroup(req.graphclient, group_id)) {
+        let path = `/groups/${group_id}/members/${user_id}/$ref`;
 
-    try {
-        await req.graphclient.api(path).delete();
-    } catch (err) {
-        console.error(err);
+        try {
+            await req.graphclient.api(path).delete();
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     res.redirect(`/groups/${group_id}`);
+}
+
+async function isDynamicGroup(client, id) {
+    return (await client.api(`/groups/${id}`).select(['groupTypes']).get())
+        .groupTypes
+        .includes('DynamicMembership');
 }

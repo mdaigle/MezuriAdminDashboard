@@ -1,5 +1,7 @@
 'use strict';
 
+import syncManagerClient from './syncManagerClient.js';
+
 export async function renderGroups(req, res) {
     let groups;
     try {
@@ -21,7 +23,24 @@ export async function renderGroups(req, res) {
         groups.value[i].members = members[i].value;
     });
 
-    res.render('groups/groups', groups);
+    let syncInstances = new syncManagerClient(req, res).instances;
+
+    // remove Sync group prefix
+    let syncIds = new Set(syncInstances.map(i => i.id));
+    groups.value.forEach((group, i) => {
+        if (group.displayName.indexOf(' ') > -1) {
+            let name = group.displayName.split(' ');
+
+            if (syncIds.has(name[0])) {
+                groups.value[i].displayName = name.slice(1).join(' ');
+                groups.value[i].syncId = syncInstances.filter(i => i.id === name[0])[0].id;
+            }
+        }
+    });
+
+    res.render('groups/groups', Object.assign(groups, {
+        syncInstances: syncInstances
+    }));
 }
 
 export async function renderSingleGroup(req, res) {
@@ -40,12 +59,17 @@ export async function addGroup(req, res) {
     try {
         let group_name = req.body.add_group_name;
 
+        if (req.body['add_sync_group'] === 'on' && req.body['sync_id'])
+            group_name = `${req.body['sync_id']} ${group_name}`;
+
         let content = {
           "displayName": group_name,
           "mailEnabled": false, //We don't want a mail group
           "mailNickname": "testMail",
           "securityEnabled": true //Need this set to true to create a security group
-        }
+        };
+
+        console.log(content);
 
         let group = await req.graphclient.api('/groups').post(content);
         res.redirect('/groups');

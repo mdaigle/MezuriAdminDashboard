@@ -1,0 +1,17 @@
+extends ../shared/page-layout.pug
+
+block vars
+    - var title = 'ODK 2 Sync'
+    - var sectionId = 'sync-add'
+
+block content-container
+    div(id=sectionId)
+        p Creating new instance...
+            br
+            b= name
+            |
+            | will be available at
+            |
+            a(href=link)= link
+        br
+        a(href='/sync'): span(class=['glyphicon', 'glyphicon-arrow-left'], aria-hidden=true)

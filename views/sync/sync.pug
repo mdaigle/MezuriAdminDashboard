@@ -1,0 +1,25 @@
+extends ../shared/page-layout.pug
+
+block vars
+    - var title = 'ODK 2 Sync'
+    - var sectionId = 'sync'
+
+block content-container
+    div(id='add-sync-form', style='padding-left: 10px;')
+        form(method='post')
+            input(
+                type='text', name='instanceName', placeholder='Add ODK 2 Sync Instance',
+                required=true pattern=validationPattern)
+            button(type='submit', class=['btn', 'btn-primary', 'btn-xs'], style='margin: 10px;')
+                span(class=['glyphicon', 'glyphicon-plus'], aria-hidden=true)
+
+    div(id=sectionId)
+        table(class='table')
+            tr
+                th Name
+                th Link
+
+            each instance in instances
+                tr(class='user')
+                    td: a(href=`/sync/detail/${instance.id}`)= instance.name
+                    td: a(href=instance.link)= instance.link

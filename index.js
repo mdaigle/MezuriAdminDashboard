@@ -33,6 +33,12 @@ import {
     addUserToGroup,
     removeUserFromGroup
 } from './js/groups';
+import {
+    renderSync,
+    addSyncPost,
+    renderSyncDetail,
+    syncDetailPost
+} from './js/sync'
 
 const app = express();
 
@@ -104,8 +110,14 @@ app.get('/groups/:group_id', renderSingleGroup);
 app.post('/groups/:group_id/addUser', addUserToGroup);
 app.get('/groups/:group_id/removeUser/:user_id', removeUserFromGroup);
 
-// TODO:
-app.get('/sync');
+app.route('/sync')
+    .get(renderSync)
+    .post(addSyncPost);
+
+app.route('/sync/detail/:id')
+    .get(renderSyncDetail)
+    .post(syncDetailPost);
+
 app.get('/jupyter', (req, res) => res.redirect('JUPYTERHUB_URL'));
 
 // We can change this to whatever port

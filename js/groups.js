@@ -48,7 +48,14 @@ export async function renderSingleGroup(req, res) {
         let group = await req.graphclient.api('/groups/' + req.params.group_id).get();
         group.group_id = group.id;
         group.members = (await req.graphclient.api('/groups/' + group.id + '/members').get()).value;
-        group.allUsers = (await req.graphclient.api('/users/').get()).value;
+
+        let memberIdSet = new Set(group.members.map(m => m.id));
+        group.users = (await req.graphclient.api('/users/').get())
+            .value
+            .filter(u => !memberIdSet.has(u.id));
+        group.groups = (await req.graphclient.api('/groups/').get())
+            .value
+            .filter(u => !memberIdSet.has(u.id) && u.id !== group.group_id);
         res.render('groups/singlegroup', group);
     } catch (err) {
         console.log(err);
@@ -96,15 +103,13 @@ export async function removeUserFromGroup(req, res) {
     let user_id = req.params.user_id;
     let group_id = req.params.group_id;
 
-    let user_uri = "https://graph.microsoft.com/v1.0/directoryObjects/" + user_id;
-    let user_ref = {
-        "@odata.id": user_uri
-    };
+    let path = `/groups/${group_id}/members/${user_id}/$ref`;
 
-    let path = '/groups/' + group_id + '/members/$ref';
+    try {
+        await req.graphclient.api(path).delete();
+    } catch (err) {
+        console.error(err);
+    }
 
-    let api = req.graphclient.api(path);
-    console.log(api);
-    //.body(user_ref).delete();
-    res.redirect('/groups/' + group_id);
+    res.redirect(`/groups/${group_id}`);
 }
